@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">MinhasTarefas</string>
+    <string name="app_name">Minhas Tarefas</string>
+    <string name="fab_content_description">Adicionar tarefa</string>
+    <string name="btn_completed_tasks">Tarefas Concluídas</string>
+    <string name="created_at_field">Criada em: 15/12/2023 - 14:32</string>
+    <string name="due_date_field">Prazo final: 25/12/2023 - 16:00</string>
+    <string name="allow_notification_field">Deseja receber notifição próximo ao prazo final?</string>
 </resources>
