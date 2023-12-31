@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MinhasTarefas"
         tools:targetApi="31">
         <activity
+            android:name=".CompletedTasksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddTaskActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
