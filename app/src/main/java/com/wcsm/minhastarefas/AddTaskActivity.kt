@@ -32,6 +32,8 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     private var savedYear = 0
     private var savedTime = ""
 
+    private lateinit var taskToEdit: Task
+
     private val binding by lazy {
         ActivityAddTaskBinding.inflate(layoutInflater)
     }
@@ -46,6 +48,10 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             val btnText = bundle.getString("button_text")
             binding.tvNewTaskScreenTitle.text = screenTitle
             binding.btnAddOrUpdate.text = btnText
+
+            if(bundle.containsKey("task")) {
+                taskToEdit = bundle.getParcelable("task")!!
+            }
         }
 
         with(binding) {
@@ -59,45 +65,73 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
             pickDate()
 
+            val titleField = layoutTitle
+            val dueDate = tvDatetimePicked.text.toString()
+
+            // Fill fields with task info when updating task
+            if(btnAddOrUpdate.text == "ATUALIZAR") {
+                Log.i("teste", "${taskToEdit}")
+                editTextTitle.setText(taskToEdit.title)
+                editTextDescription.setText(taskToEdit.description)
+                cbAllowNotification.isChecked = taskToEdit.allowNotification > 0
+                tvDatetimePicked.text = taskToEdit.dueDate
+            }
+
             btnAddOrUpdate.setOnClickListener {
                 if(btnAddOrUpdate.text == "ADICIONAR") {
-                    val titleField = layoutTitle
-                    val dueDate = tvDatetimePicked.text.toString()
-
-                    Log.i("teste", "$dueDate")
-
-                    val validation = validateTitle(titleField)
-
+                    Log.i("teste", "entrou ADICIONAR")
+                    val title = binding.editTextTitle.text.toString()
+                    val validation = validateTitle(titleField, title)
                     if(validation) {
-                        val title = editTextTitle.text.toString()
-                        val description = editTextDescription.text.toString()
-                        val allowNotification = if(cbAllowNotification.isChecked) 1 else 0
-
-                    val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
-                        val taskDAO = TaskDAO(applicationContext)
-                        if(taskDAO.save(task)) {
-                            Toast.makeText(applicationContext, "Tarefa registrada com sucesso!", Toast.LENGTH_SHORT).show()
-                            finish()
-                        }
+                        addTask(title, actualDate, dueDate)
                     }
                 } else if(btnAddOrUpdate.text == "ATUALIZAR") {
-                    // UPDATE TASK
+                    Log.i("teste", "entrou ATUALIZAR")
+                    val title = binding.editTextTitle.text.toString()
+                    val validation = validateTitle(titleField, title)
+                    if(validation) {
+                        updateTask(taskToEdit, title, dueDate)
+                    }
                 }
             }
         }
     }
 
-    private fun validateTitle(title: TextInputLayout): Boolean {
-        title.error = null
+    private fun addTask(title: String, actualDate: String, dueDate: String ) {
+            val description = binding.editTextDescription.text.toString()
+            val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
+            val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
+            val taskDAO = TaskDAO(applicationContext)
+
+            if(taskDAO.save(task)) {
+                Toast.makeText(applicationContext, "Tarefa registrada com sucesso!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+    }
+
+    private fun updateTask(task: Task, title: String, dueDate: String) {
+        val description = binding.editTextDescription.text.toString()
+        val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
+
+        val task = Task(task.id, title, description, task.createdAt, dueDate, allowNotification, task.completed)
+        val taskDAO = TaskDAO(applicationContext)
+        if(taskDAO.update(task)) {
+            Toast.makeText(applicationContext, "Tarefa atualizada com sucesso!", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+    }
+
+    private fun validateTitle(titleField: TextInputLayout, title: String): Boolean {
+        titleField.error = null
         if(title.isEmpty()) {
-            title.error = "Digite o título da tarefa"
+            titleField.error = "Digite o título da tarefa"
             return false
         }
         return true
     }
 
-    fun convertToSQLiteFormat(inputDate: String): String {
+    private fun convertToSQLiteFormat(inputDate: String): String {
         val inputFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
         val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 

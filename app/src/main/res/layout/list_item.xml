@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
     <TextView
@@ -13,13 +14,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        tools:text="Passear com o cachorro contar caracteres paracontan"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Passear com o cachorro contar caracteres paracontan" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -28,12 +29,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        tools:text="Descriçaõ de 3 linhas para ver quantas linhas tem e devo colocar o limite de 3 linhas para isso vamos preencher ate atingir as 3 linhas agora vamos ver se fechou tudo partida"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="Descriçaõ de 3 linhas para ver quantas linhas tem e devo colocar o limite de 3 linhas para isso vamos preencher ate atingir as 3 linhas agora vamos ver se fechou tudo partida" />
 
     <TextView
         android:id="@+id/tvCreatedAt"
@@ -42,12 +43,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        tools:text="@string/created_at_field"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+        tools:text="@string/created_at_field" />
 
     <TextView
         android:id="@+id/tvDueDate"
@@ -56,13 +57,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        tools:text="@string/due_date_field"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCreatedAt" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCreatedAt"
+        tools:text="@string/due_date_field" />
 
     <ImageButton
         android:id="@+id/btnEdit"
@@ -109,10 +110,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:checked="true"
-        tools:text="ToggleButton"
         android:textOff="PENDENTE"
         android:textOn="CONCLUÍDA"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swAllowNotification" />
+        app:layout_constraintTop_toBottomOf="@+id/swAllowNotification"
+        tools:text="ToggleButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

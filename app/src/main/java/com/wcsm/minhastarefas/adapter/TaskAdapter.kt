@@ -43,7 +43,6 @@ class TaskAdapter(
                     onClickUpdate(task)
                 }
             }
-
         }
     }
 
