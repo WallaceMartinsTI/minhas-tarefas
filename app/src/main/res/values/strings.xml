@@ -8,6 +8,7 @@
     <string name="add_new_task">Adicionar Tarefa</string>
     <string name="edit_task">Editar Tarefa</string>
     <string name="new_task_title">Título da tarefa</string>
+    <string name="completed_tasks_screen_title">TAREFAS CONCLUÍDAS</string>
     <string name="new_task_title_helptext">Ex.: Colocar o lixo na rua</string>
     <string name="new_task_description">Descrição da tarefa</string>
     <string name="new_task_description_helptext">Ex.: Não esquecer de tirar do banheiro e cozinha</string>
