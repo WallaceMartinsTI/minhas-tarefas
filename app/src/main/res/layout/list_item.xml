@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Passear com o cachorro contar caracteres paracontan"
+        tools:text="Passear com o cachorro contar caracteres paracontan"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Descriçaõ de 3 linhas para ver quantas linhas tem e devo colocar o limite de 3 linhas para isso vamos preencher ate atingir as 3 linhas agora vamos ver se fechou tudo partida"
+        tools:text="Descriçaõ de 3 linhas para ver quantas linhas tem e devo colocar o limite de 3 linhas para isso vamos preencher ate atingir as 3 linhas agora vamos ver se fechou tudo partida"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -42,7 +42,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/created_at_field"
+        tools:text="@string/created_at_field"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +56,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/due_date_field"
+        tools:text="@string/due_date_field"
         android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,20 +66,22 @@
 
     <ImageButton
         android:id="@+id/btnEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/edit_task"
         app:layout_constraintEnd_toStartOf="@+id/btnDelete"
         app:layout_constraintTop_toBottomOf="@+id/swAllowNotification"
         app:srcCompat="@drawable/ic_edit_24" />
 
     <ImageButton
         android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/add_new_task"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/swAllowNotification"
         app:srcCompat="@drawable/ic_delete_24" />
@@ -87,16 +89,18 @@
     <Switch
         android:id="@+id/swAllowNotification"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:checked="false"
         android:layoutDirection="ltr"
         android:text="@string/allow_notification_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDueDate" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDueDate"
+        tools:checked="false" />
 
     <ToggleButton
         android:id="@+id/tgCompleted"
@@ -105,7 +109,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:checked="true"
-        android:text="ToggleButton"
+        tools:text="ToggleButton"
         android:textOff="PENDENTE"
         android:textOn="CONCLUÍDA"
         app:layout_constraintStart_toStartOf="parent"

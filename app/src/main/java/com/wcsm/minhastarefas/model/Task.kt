@@ -10,6 +10,6 @@ data class Task (
     val description: String,
     val createdAt: String,
     val dueDate: String,
-    val allowNotification: Boolean,
-    val completed: Boolean
+    val allowNotification: Int,
+    val completed: Int
 ) : Parcelable

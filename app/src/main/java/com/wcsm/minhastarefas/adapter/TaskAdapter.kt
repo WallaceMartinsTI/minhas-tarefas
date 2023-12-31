@@ -26,7 +26,25 @@ class TaskAdapter(
             binding = itemBinding
         }
 
-        fun bind(task: Task) {}
+        fun bind(task: Task) {
+
+            with(binding) {
+                tvTitle.text = task.title
+                tvDescription.text = task.description
+                tvCreatedAt.text = "Criada em: ${task.createdAt}"
+                tvDueDate.text = "Prazo final: ${task.dueDate}"
+                swAllowNotification.isChecked = task.allowNotification > 0
+                tgCompleted.isChecked = task.completed > 0
+
+                btnDelete.setOnClickListener {
+                    onClickDelete(task.id)
+                }
+                btnEdit.setOnClickListener {
+                    onClickUpdate(task)
+                }
+            }
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {

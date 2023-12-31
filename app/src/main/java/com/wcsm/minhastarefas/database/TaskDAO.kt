@@ -106,10 +106,12 @@ class TaskDAO(context: Context): ITaskDAO {
             val id = cursor.getInt(idIndex)
             val title = cursor.getString(titleIndex)
             val description = cursor.getString(descriptionIndex)
-            val createdAt = cursor.getString(createdAtIndex)
-            val dueDate = cursor.getString(dueDateIndex)
-            val allowNotification = cursor.getInt(allowNotificationIndex) > 0;
-            val completed = cursor.getInt(completedIndex) > 0;
+            val createdAt = cursor.getString(createdAtIndex) //null
+            val dueDate = cursor.getString(dueDateIndex)    //null
+            val allowNotification = cursor.getInt(allowNotificationIndex);
+            val completed = cursor.getInt(completedIndex);
+
+            //Log.i("teste", "$id - $title - $description - $createdAt - $dueDate - $allowNotification - $completed")
 
             taskList.add(Task(id, title, description, createdAt, dueDate, allowNotification, completed))
         }

@@ -15,7 +15,10 @@ import com.google.android.material.textfield.TextInputLayout
 import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ActivityAddTaskBinding
 import com.wcsm.minhastarefas.model.Task
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -46,28 +49,31 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         }
 
         with(binding) {
-
-            val allowNotification = cbAllowNotification.isChecked
-
             btnBack.setOnClickListener {
                 finish()
             }
+
+            getDateTimeCalendar()
+            val actualDate = "$day/${month + 1}/$year - ${formatTime(hour, minute)}"
+            binding.tvDatetimePicked.text = actualDate
+
+            pickDate()
 
             btnAddOrUpdate.setOnClickListener {
                 if(btnAddOrUpdate.text == "ADICIONAR") {
                     val titleField = layoutTitle
                     val dueDate = tvDatetimePicked.text.toString()
 
-                    Log.i("teste", "$dueDate") //31/12/2023 - 00:50
+                    Log.i("teste", "$dueDate")
 
                     val validation = validateTitle(titleField)
 
                     if(validation) {
-                        // VALIDATION OK -> ADD TASK
                         val title = editTextTitle.text.toString()
-                        val description = editTextTitle.text.toString()
+                        val description = editTextDescription.text.toString()
+                        val allowNotification = if(cbAllowNotification.isChecked) 1 else 0
 
-                        val task = Task(-1, title, description, "default", dueDate, allowNotification, false)
+                    val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
                         val taskDAO = TaskDAO(applicationContext)
                         if(taskDAO.save(task)) {
                             Toast.makeText(applicationContext, "Tarefa registrada com sucesso!", Toast.LENGTH_SHORT).show()
@@ -79,12 +85,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                 }
             }
         }
-
-
-        getDateTimeCalendar()
-        binding.tvDatetimePicked.text = "$day/${month + 1}/$year - ${formatTime(hour, minute)}"
-
-        pickDate()
     }
 
     private fun validateTitle(title: TextInputLayout): Boolean {
@@ -95,6 +95,14 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             return false
         }
         return true
+    }
+
+    fun convertToSQLiteFormat(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate) ?: Date()
+        return outputFormat.format(date)
     }
 
     private fun getDateTimeCalendar() {
