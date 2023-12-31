@@ -111,7 +111,7 @@ class TaskDAO(context: Context): ITaskDAO {
             val allowNotification = cursor.getInt(allowNotificationIndex);
             val completed = cursor.getInt(completedIndex);
 
-            //Log.i("teste", "$id - $title - $description - $createdAt - $dueDate - $allowNotification - $completed")
+            Log.i("teste", "$id - $title - $description - $createdAt - $dueDate - $allowNotification - $completed")
 
             taskList.add(Task(id, title, description, createdAt, dueDate, allowNotification, completed))
         }
