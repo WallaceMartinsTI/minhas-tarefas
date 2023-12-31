@@ -7,7 +7,7 @@ import com.wcsm.minhastarefas.model.Task
 
 class TaskDAO(context: Context): ITaskDAO {
 
-    private val writting = DatabaseHelper(context).writableDatabase
+    private val writing = DatabaseHelper(context).writableDatabase
     private val reading = DatabaseHelper(context).readableDatabase
     override fun save(task: Task): Boolean {
         val content = ContentValues()
@@ -15,10 +15,11 @@ class TaskDAO(context: Context): ITaskDAO {
         content.put(DatabaseHelper.COL_TASK_DESCRIPTION, task.description)
         content.put(DatabaseHelper.COL_TASK_CREATED_AT, task.createdAt)
         content.put(DatabaseHelper.COL_TASK_DUE_DATE, task.dueDate)
+        content.put(DatabaseHelper.COL_ALLOW_NOTIFICATION, task.allowNotification)
         content.put(DatabaseHelper.COL_TASK_COMPLETED, task.completed)
 
         try {
-            writting.insert(
+            writing.insert(
                 DatabaseHelper.TABLE_NAME,
                 null,
                 content
@@ -40,10 +41,11 @@ class TaskDAO(context: Context): ITaskDAO {
         content.put(DatabaseHelper.COL_TASK_DESCRIPTION, task.description)
         content.put(DatabaseHelper.COL_TASK_CREATED_AT, task.createdAt)
         content.put(DatabaseHelper.COL_TASK_DUE_DATE, task.dueDate)
+        content.put(DatabaseHelper.COL_ALLOW_NOTIFICATION, task.allowNotification)
         content.put(DatabaseHelper.COL_TASK_COMPLETED, task.completed)
 
         try {
-            writting.update(
+            writing.update(
                 DatabaseHelper.TABLE_NAME,
                 content,
                 "${DatabaseHelper.COL_TASK_ID} = ?",
@@ -62,7 +64,7 @@ class TaskDAO(context: Context): ITaskDAO {
     override fun delete(taskId: Int): Boolean {
         val args = arrayOf(taskId.toString())
         try {
-            writting.delete(
+            writing.delete(
                 DatabaseHelper.TABLE_NAME,
                 "${DatabaseHelper.COL_TASK_ID} = ?",
                 args
@@ -81,12 +83,13 @@ class TaskDAO(context: Context): ITaskDAO {
         val taskList = mutableListOf<Task>()
 
         val sql = "SELECT" +
-                " ${DatabaseHelper.COL_TASK_ID} , ${DatabaseHelper.COL_TASK_TITLE}," +
+                " ${DatabaseHelper.COL_TASK_ID}, ${DatabaseHelper.COL_TASK_TITLE}," +
                 " ${DatabaseHelper.COL_TASK_DESCRIPTION}," +
                 " strftime('%d/%m/%Y - %H:%M', ${DatabaseHelper.COL_TASK_CREATED_AT})" +
                 " AS ${DatabaseHelper.COL_TASK_CREATED_AT}," +
                 " strftime('%d/%m/%Y - %H:%M', ${DatabaseHelper.COL_TASK_DUE_DATE})" +
-                " AS ${DatabaseHelper.COL_TASK_DUE_DATE}, completed" +
+                " AS ${DatabaseHelper.COL_TASK_DUE_DATE}," +
+                " ${DatabaseHelper.COL_ALLOW_NOTIFICATION}, ${DatabaseHelper.COL_TASK_COMPLETED}" +
                 " FROM ${DatabaseHelper.TABLE_NAME};"
 
         val cursor = reading.rawQuery(sql, null)
@@ -96,6 +99,7 @@ class TaskDAO(context: Context): ITaskDAO {
         val descriptionIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_DESCRIPTION)
         val createdAtIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_CREATED_AT)
         val dueDateIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_DUE_DATE)
+        val allowNotificationIndex = cursor.getColumnIndex(DatabaseHelper.COL_ALLOW_NOTIFICATION)
         val completedIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_COMPLETED)
 
         while(cursor.moveToNext()) {
@@ -104,9 +108,10 @@ class TaskDAO(context: Context): ITaskDAO {
             val description = cursor.getString(descriptionIndex)
             val createdAt = cursor.getString(createdAtIndex)
             val dueDate = cursor.getString(dueDateIndex)
+            val allowNotification = cursor.getInt(allowNotificationIndex) > 0;
             val completed = cursor.getInt(completedIndex) > 0;
 
-            taskList.add(Task(id, title, description, createdAt, dueDate, completed))
+            taskList.add(Task(id, title, description, createdAt, dueDate, allowNotification, completed))
         }
 
         return taskList

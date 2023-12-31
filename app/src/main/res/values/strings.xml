@@ -7,7 +7,10 @@
     <string name="allow_notification_field">Deseja receber notifição próximo ao prazo final?</string>
     <string name="add_new_task">Adicionar Tarefa</string>
     <string name="edit_task">Editar Tarefa</string>
-    <string name="new_task_title"></string>
-    <string name="new_task_description"></string>
-    <string name="new_task_due_date"></string>
+    <string name="new_task_title">Título da tarefa</string>
+    <string name="new_task_title_helptext">Ex.: Colocar o lixo na rua</string>
+    <string name="new_task_description">Descrição da tarefa</string>
+    <string name="new_task_description_helptext">Ex.: Não esquecer de tirar do banheiro e cozinha</string>
+    <string name="new_task_due_date">PRAZO FINAL</string>
+    <string name="new_task_back_btn">VOLTAR</string>
 </resources>

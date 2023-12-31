@@ -3,16 +3,21 @@
     <!-- Theme.MaterialComponents.DayNight.DarkActionBar -->
     <style name="Base.Theme.MinhasTarefas" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/primaria</item>
-        <item name="colorPrimaryVariant">@color/primaria_variacao</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secundaria</item>
-        <item name="colorSecondaryVariant">@color/secundaria_variacao</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowBackground">@color/fundo</item>
+    </style>
+
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+        <item name="android:format24Hour">HH:mm</item>
     </style>
 
     <style name="Theme.MinhasTarefas" parent="Base.Theme.MinhasTarefas" />

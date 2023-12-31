@@ -4,11 +4,11 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- LIGHT THEME -->
-    <color name="primaria">#FF5617</color>
-    <color name="primaria_variacao">#E34D0B</color>
+    <color name="primary">#FF5617</color>
+    <color name="primary_variant">#E34D0B</color>
 
-    <color name="secundaria">#FF6F3A</color>
-    <color name="secundaria_variacao">#FF8051</color>
+    <color name="secondary">#FF6F3A</color>
+    <color name="secondary_variant">#FF8051</color>
 
     <color name="fundo">#EFEFEF</color>
 

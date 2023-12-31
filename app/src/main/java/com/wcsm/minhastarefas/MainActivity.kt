@@ -25,10 +25,13 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             fabAddTask.setOnClickListener {
-                startActivity(Intent(applicationContext, AddTaskActivity::class.java))
+                val intent = Intent(applicationContext, AddTaskActivity::class.java)
+                intent.putExtra("screen_title", "Adicionar Tarefa")
+                intent.putExtra("button_text", "ADICIONAR")
+                startActivity(intent)
             }
 
-            btnCompletedTasks.setOnClickListener {
+            fabCompletedTasks.setOnClickListener {
                 startActivity(Intent(applicationContext, CompletedTasksActivity::class.java))
             }
 
@@ -44,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     private fun edit(task: Task) {
         val intent = Intent(applicationContext, AddTaskActivity::class.java)
         intent.putExtra("task", task)
+        intent.putExtra("screen_title", "Editar Tarefa")
+        intent.putExtra("button_text", "ATUALIZAR")
         startActivity(intent)
     }
 
