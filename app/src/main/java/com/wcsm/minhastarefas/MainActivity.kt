@@ -3,6 +3,7 @@ package com.wcsm.minhastarefas
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var taskList = emptyList<Task>()
+    private var completedTasksList = emptyList<Task>()
+
     private var taskAdapter: TaskAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +38,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             fabCompletedTasks.setOnClickListener {
-                startActivity(Intent(applicationContext, CompletedTasksActivity::class.java))
+                getCompletedTasks()
+                val intent = Intent(applicationContext, CompletedTasksActivity::class.java)
+                //Log.i("teste", "CompletedTasks")
+                //Log.i("teste", "$completedTasksList")
+                intent.putParcelableArrayListExtra("tasks", ArrayList(completedTasksList))
+                startActivity(intent)
             }
 
             taskAdapter = TaskAdapter(
+                applicationContext,
+                {updateTaskList()},
                 {taskId -> confirmDelete(taskId)},
                 {task -> edit(task)}
             )
@@ -77,10 +87,35 @@ class MainActivity : AppCompatActivity() {
         alertBuilder.create().show()
     }
 
+    private fun getCompletedTasks() {
+        Log.i("teste", "Dentro função getCompletedTasks")
+        val taskDAO = TaskDAO(this)
+        val tasks = taskDAO.listTasks()
+        var completedTasks = mutableListOf<Task>()
+        tasks.forEach {
+            if(it.completed > 0) {
+                completedTasks.add(it)
+            }
+        }
+        completedTasksList = completedTasks
+        Log.i("teste", "completedTasksList: $completedTasksList")
+        Log.i("teste", "completedTasks: $completedTasks")
+    }
+
     private fun updateTaskList() {
+        val pendingTasks = mutableListOf<Task>()
+
         val taskDAO = TaskDAO(this)
         taskList = taskDAO.listTasks()
-        taskAdapter?.addList(taskList)
+
+        taskList.forEach {
+            if(it.completed == 0) {
+                pendingTasks.add(it)
+            }
+        }
+
+        taskAdapter?.addList(pendingTasks)
+        //taskAdapter?.addList(taskList)
     }
 
     override fun onStart() {

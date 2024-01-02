@@ -70,7 +70,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
             // Fill fields with task info when updating task
             if(btnAddOrUpdate.text == "ATUALIZAR") {
-                Log.i("teste", "$taskToEdit")
                 editTextTitle.setText(taskToEdit.title)
                 editTextDescription.setText(taskToEdit.description)
                 cbAllowNotification.isChecked = taskToEdit.allowNotification > 0
@@ -79,16 +78,13 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
             btnAddOrUpdate.setOnClickListener {
                 if(btnAddOrUpdate.text == "ADICIONAR") {
-                    Log.i("teste", "entrou ADICIONAR")
                     val title = binding.editTextTitle.text.toString()
                     val validation = validateTitle(titleField, title)
                     val dueDate = tvDatetimePicked.text.toString()
-                    Log.i("teste", "dueDate do ADICIONAR: $dueDate")
                     if(validation) {
                         addTask(title, actualDate, dueDate)
                     }
                 } else if(btnAddOrUpdate.text == "ATUALIZAR") {
-                    Log.i("teste", "entrou ATUALIZAR")
                     val title = binding.editTextTitle.text.toString()
                     val validation = validateTitle(titleField, title)
                     val dueDate = tvDatetimePicked.text.toString()
@@ -104,7 +100,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             val description = binding.editTextDescription.text.toString()
             val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-            Log.i("teste", "dueDate: $dueDate")
             val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
             val taskDAO = TaskDAO(applicationContext)
 

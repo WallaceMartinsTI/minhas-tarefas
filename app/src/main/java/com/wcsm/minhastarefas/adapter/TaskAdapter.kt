@@ -1,12 +1,24 @@
 package com.wcsm.minhastarefas.adapter
 
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ListItemBinding
 import com.wcsm.minhastarefas.model.Task
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class TaskAdapter(
+    private val context: Context,
+    val updateTaskList: () -> Unit,
     val onClickDelete: (Int) -> Unit,
     val onClickUpdate: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -24,10 +36,10 @@ class TaskAdapter(
 
         init {
             binding = itemBinding
+            Log.i("teste", "$taskList")
         }
 
         fun bind(task: Task) {
-
             with(binding) {
                 tvTitle.text = task.title
                 tvDescription.text = task.description
@@ -41,6 +53,20 @@ class TaskAdapter(
                 }
                 btnEdit.setOnClickListener {
                     onClickUpdate(task)
+                }
+                tgCompleted.setOnClickListener {
+                    val completed = if(tgCompleted.isChecked) 1 else 0
+                    val task = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(task.dueDate), task.allowNotification, completed)
+                    val taskDAO = TaskDAO(context)
+
+                    if(taskDAO.update(task)) {
+                        Toast.makeText(context, "Tarefa concluída!", Toast.LENGTH_SHORT).show()
+                        tgCompleted.isClickable = false
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            updateTaskList()
+                            tgCompleted.isClickable = true
+                        }, 2000)
+                    }
                 }
             }
         }
@@ -61,5 +87,13 @@ class TaskAdapter(
 
     override fun getItemCount(): Int {
         return taskList.size
+    }
+
+    private fun convertToSQLiteFormat(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate) ?: Date()
+        return outputFormat.format(date)
     }
 }
