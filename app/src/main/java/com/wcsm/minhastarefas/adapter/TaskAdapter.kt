@@ -13,6 +13,7 @@ import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ListItemBinding
 import com.wcsm.minhastarefas.model.Task
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -58,10 +59,11 @@ class TaskAdapter(
                 tgCompleted.setOnClickListener {
                     val completed = if(tgCompleted.isChecked) 1 else 0
                     val allowNotification = if(swAllowNotification.isChecked) 1 else 0
-                    val task = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(task.updatedAt), convertToSQLiteFormat(task.dueDate), allowNotification, completed)
+                    val actualDate = getDateTimeCalendar()
+                    val updatedTask = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(task.dueDate), allowNotification, completed)
                     val taskDAO = TaskDAO(context)
 
-                    if(taskDAO.update(task)) {
+                    if(taskDAO.update(updatedTask)) {
                         Toast.makeText(context, "Tarefa concluída!", Toast.LENGTH_SHORT).show()
                         tgCompleted.isClickable = false
                         fabCompletedTasks.isEnabled = false
@@ -99,5 +101,16 @@ class TaskAdapter(
 
         val date = inputFormat.parse(inputDate) ?: Date()
         return outputFormat.format(date)
+    }
+
+    private fun getDateTimeCalendar(): String {
+        val cal = Calendar.getInstance()
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+        val month = cal.get(Calendar.MONTH)
+        val year = cal.get(Calendar.YEAR)
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
+        val minute = cal.get(Calendar.MINUTE)
+
+        return "$day/${month + 1}/$year - $hour:$minute"
     }
 }

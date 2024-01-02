@@ -3,6 +3,7 @@ package com.wcsm.minhastarefas.adapter
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,6 +13,7 @@ import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ListItemBinding
 import com.wcsm.minhastarefas.model.Task
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -54,15 +56,19 @@ class CompletedTasksAdapter(
 
                 tgCompleted.setOnClickListener {
                     val completed = if(tgCompleted.isChecked) 1 else 0
-                    val task = Task(
-                        completedTasksList.id, completedTasksList.title, completedTasksList.description,
+                    val actualDate = getDateTimeCalendar()
+                    val updatedTask = Task(
+                        completedTasksList.id, completedTasksList.title,
+                        completedTasksList.description,
                         convertToSQLiteFormat(completedTasksList.createdAt),
-                        convertToSQLiteFormat(completedTasksList.updatedAt),
+                        convertToSQLiteFormat(actualDate),
                         convertToSQLiteFormat(completedTasksList.dueDate),
-                        completedTasksList.allowNotification, completed)
+                        completedTasksList.allowNotification,
+                        completed
+                    )
                     val taskDAO = TaskDAO(context)
 
-                    if(taskDAO.update(task)) {
+                    if(taskDAO.update(updatedTask)) {
                         Toast.makeText(context, "Tarefa concluída!", Toast.LENGTH_SHORT).show()
                         tgCompleted.isClickable = false
                         btnBackToMain.isEnabled = false
@@ -100,5 +106,16 @@ class CompletedTasksAdapter(
 
         val date = inputFormat.parse(inputDate) ?: Date()
         return outputFormat.format(date)
+    }
+
+    private fun getDateTimeCalendar(): String {
+        val cal = Calendar.getInstance()
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+        val month = cal.get(Calendar.MONTH)
+        val year = cal.get(Calendar.YEAR)
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
+        val minute = cal.get(Calendar.MINUTE)
+
+        return "$day/${month + 1}/$year - $hour:$minute"
     }
 }
