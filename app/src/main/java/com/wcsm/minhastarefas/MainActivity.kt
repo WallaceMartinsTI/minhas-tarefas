@@ -115,8 +115,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        taskAdapter?.addList(pendingTasks)
-        //taskAdapter?.addList(taskList)
+        val sortedList = pendingTasks.sortedByDescending { it.createdAt }
+
+        taskAdapter?.addList(sortedList)
     }
 
     override fun onStart() {

@@ -58,7 +58,7 @@ class TaskAdapter(
                 tgCompleted.setOnClickListener {
                     val completed = if(tgCompleted.isChecked) 1 else 0
                     val allowNotification = if(swAllowNotification.isChecked) 1 else 0
-                    val task = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(task.dueDate), allowNotification, completed)
+                    val task = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(task.updatedAt), convertToSQLiteFormat(task.dueDate), allowNotification, completed)
                     val taskDAO = TaskDAO(context)
 
                     if(taskDAO.update(task)) {

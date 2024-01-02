@@ -81,7 +81,7 @@ class CompletedTasksActivity : AppCompatActivity() {
             }
         }
 
-        completedTasksAdapter?.addList(completedTasks)
+        completedTasksAdapter?.addList(completedTasks.reversed())
     }
 
     override fun onStart() {

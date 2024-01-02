@@ -57,6 +57,7 @@ class CompletedTasksAdapter(
                     val task = Task(
                         completedTasksList.id, completedTasksList.title, completedTasksList.description,
                         convertToSQLiteFormat(completedTasksList.createdAt),
+                        convertToSQLiteFormat(completedTasksList.updatedAt),
                         convertToSQLiteFormat(completedTasksList.dueDate),
                         completedTasksList.allowNotification, completed)
                     val taskDAO = TaskDAO(context)

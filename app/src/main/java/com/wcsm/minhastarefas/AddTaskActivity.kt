@@ -60,7 +60,9 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             }
 
             getDateTimeCalendar()
-            val actualDate = "$day/${month + 1}/$year - ${formatTime(hour, minute)}"
+            //val actualDate = "$day/${month + 1}/$year - ${formatTime(hour, minute)}"
+
+            val actualDate = "${day}/${month + 1}/${year} - $hour:$minute"
             binding.tvDatetimePicked.text = actualDate
 
             pickDate()
@@ -89,7 +91,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                     val validation = validateTitle(titleField, title)
                     val dueDate = tvDatetimePicked.text.toString()
                     if(validation) {
-                        updateTask(taskToEdit, title, dueDate)
+                        updateTask(taskToEdit, title, actualDate, dueDate)
                     }
                 }
             }
@@ -100,7 +102,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             val description = binding.editTextDescription.text.toString()
             val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-            val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
+            val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
             val taskDAO = TaskDAO(applicationContext)
 
             if(taskDAO.save(task)) {
@@ -109,11 +111,11 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             }
     }
 
-    private fun updateTask(task: Task, title: String, dueDate: String) {
+    private fun updateTask(task: Task, title: String, actualDate: String, dueDate: String) {
         val description = binding.editTextDescription.text.toString()
         val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(dueDate), allowNotification, task.completed)
+        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, task.completed)
         val taskDAO = TaskDAO(applicationContext)
         if(taskDAO.update(task)) {
             Toast.makeText(applicationContext, "Tarefa atualizada com sucesso!", Toast.LENGTH_SHORT).show()
@@ -143,7 +145,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         day = cal.get(Calendar.DAY_OF_MONTH)
         month = cal.get(Calendar.MONTH)
         year = cal.get(Calendar.YEAR)
-        hour = cal.get(Calendar.HOUR)
+        hour = cal.get(Calendar.HOUR_OF_DAY)
         minute = cal.get(Calendar.MINUTE)
     }
 
@@ -155,10 +157,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
             datePickerDialog.show()
         }
-    }
-
-    private fun formatTime(hour: Int, minute: Int): String {
-        return String.format("%02d:%02d", hour, minute)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
@@ -174,8 +172,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
     @SuppressLint("SetTextI18n")
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        savedTime = formatTime(hourOfDay, minute)
-
+        savedTime = String.format("%02d:%02d", hourOfDay, minute) //formatTime(hourOfDay, minute)
         binding.tvDatetimePicked.text = "$savedDay/${savedMonth + 1}/$savedYear - $savedTime"
     }
 }

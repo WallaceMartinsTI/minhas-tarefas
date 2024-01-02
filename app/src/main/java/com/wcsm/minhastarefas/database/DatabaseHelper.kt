@@ -14,6 +14,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE, null
         const val COL_TASK_TITLE = "title"
         const val COL_TASK_DESCRIPTION = "description"
         const val COL_TASK_CREATED_AT = "created_at"
+        const val COL_TASK_UPDATED_AT = "updated_at"
         const val COL_TASK_DUE_DATE = "due_date"
         const val COL_ALLOW_NOTIFICATION = "allow_notification"
         const val COL_TASK_COMPLETED = "completed"
@@ -24,6 +25,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE, null
                 " $COL_TASK_TITLE VARCHAR(50) NOT NULL," +
                 " $COL_TASK_DESCRIPTION VARCHAR(170)," +
                 " $COL_TASK_CREATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                " $COL_TASK_UPDATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 " $COL_TASK_DUE_DATE DATETIME NOT NULL," +
                 " $COL_ALLOW_NOTIFICATION INTEGER NOT NULL DEFAULT 0," +
                 " $COL_TASK_COMPLETED INTEGER NOT NULL DEFAULT 0" +
