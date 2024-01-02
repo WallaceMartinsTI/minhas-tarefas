@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
                 applicationContext,
                 {updateTaskList()},
                 {taskId -> confirmDelete(taskId)},
-                {task -> edit(task)}
+                {task -> edit(task)},
+                fabCompletedTasks
             )
             rvTasks.adapter = taskAdapter
             rvTasks.addItemDecoration(

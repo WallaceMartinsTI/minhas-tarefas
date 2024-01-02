@@ -2,14 +2,12 @@ package com.wcsm.minhastarefas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wcsm.minhastarefas.adapter.CompletedTasksAdapter
-import com.wcsm.minhastarefas.adapter.TaskAdapter
 import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ActivityCompletedTasksBinding
 import com.wcsm.minhastarefas.model.Task
@@ -41,7 +39,9 @@ class CompletedTasksActivity : AppCompatActivity() {
                 finish()
             }
 
-            completedTasksAdapter = CompletedTasksAdapter(tasks) { taskId -> confirmDelete(taskId) }
+            completedTasksAdapter = CompletedTasksAdapter(applicationContext, tasks,
+                { updateCompletedTaskList() }, {taskId -> confirmDelete(taskId)}, btnBackToMain)
+
             rvCompletedTasks.adapter = completedTasksAdapter
             rvCompletedTasks.addItemDecoration(
                 DividerItemDecoration(applicationContext, RecyclerView.VERTICAL)
@@ -57,7 +57,7 @@ class CompletedTasksActivity : AppCompatActivity() {
         alertBuilder.setPositiveButton("Sim") {_, _ ->
             val taskDAO = TaskDAO(this)
             if(taskDAO.delete(id)) {
-                updateTaskList()
+                updateCompletedTaskList()
                 Toast.makeText(this, "Tarefa removida", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Erro ao remover tarefa", Toast.LENGTH_SHORT).show()
@@ -69,7 +69,7 @@ class CompletedTasksActivity : AppCompatActivity() {
         alertBuilder.create().show()
     }
 
-    private fun updateTaskList() {
+    private fun updateCompletedTaskList() {
         val completedTasks = mutableListOf<Task>()
 
         val taskDAO = TaskDAO(this)
@@ -86,6 +86,6 @@ class CompletedTasksActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        updateTaskList()
+        updateCompletedTaskList()
     }
 }
