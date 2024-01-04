@@ -5,12 +5,9 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
-import androidx.core.view.isEmpty
 import com.google.android.material.textfield.TextInputLayout
 import com.wcsm.minhastarefas.database.TaskDAO
 import com.wcsm.minhastarefas.databinding.ActivityAddTaskBinding
@@ -60,7 +57,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             }
 
             getDateTimeCalendar()
-            //val actualDate = "$day/${month + 1}/$year - ${formatTime(hour, minute)}"
 
             val actualDate = "${day}/${month + 1}/${year} - $hour:$minute"
             binding.tvDatetimePicked.text = actualDate
@@ -68,7 +64,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             pickDate()
 
             val titleField = layoutTitle
-            //var dueDate = tvDatetimePicked.text.toString()
 
             // Fill fields with task info when updating task
             if(btnAddOrUpdate.text == "ATUALIZAR") {
@@ -102,7 +97,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             val description = binding.editTextDescription.text.toString()
             val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-            val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0)
+            val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0, 0)
             val taskDAO = TaskDAO(applicationContext)
 
             if(taskDAO.save(task)) {
@@ -115,8 +110,9 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         val description = binding.editTextDescription.text.toString()
         val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, task.completed)
+        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, task.notified, task.completed)
         val taskDAO = TaskDAO(applicationContext)
+
         if(taskDAO.update(task)) {
             Toast.makeText(applicationContext, "Tarefa atualizada com sucesso!", Toast.LENGTH_SHORT).show()
             finish()

@@ -12,5 +12,6 @@ data class Task (
     val updatedAt: String,
     val dueDate: String,
     val allowNotification: Int,
+    val notified: Int,
     val completed: Int
 ) : Parcelable

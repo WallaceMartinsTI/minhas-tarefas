@@ -3,7 +3,6 @@ package com.wcsm.minhastarefas.adapter
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -38,7 +37,6 @@ class TaskAdapter(
 
         init {
             binding = itemBinding
-            Log.i("teste", "$taskList")
         }
 
         fun bind(task: Task) {
@@ -56,17 +54,33 @@ class TaskAdapter(
                 btnEdit.setOnClickListener {
                     onClickUpdate(task)
                 }
+                swAllowNotification.setOnClickListener {
+                    val allowNotification = if(swAllowNotification.isChecked) 1 else 0
+                    val updatedTask = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(task.updatedAt), convertToSQLiteFormat(task.dueDate), allowNotification, task.notified, task.completed)
+                    val taskDAO = TaskDAO(context)
+
+                    val message = if(swAllowNotification.isChecked) "habilitadas" else "desabilitadas"
+
+                    if(taskDAO.update(updatedTask)) {
+                        Toast.makeText(context, "Notificações $message!", Toast.LENGTH_SHORT).show()
+                        swAllowNotification.isClickable = false
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            updateTaskList()
+                            swAllowNotification.isClickable = true
+                        }, 1500)
+                    }
+                }
                 tgCompleted.setOnClickListener {
                     val completed = if(tgCompleted.isChecked) 1 else 0
-                    val allowNotification = if(swAllowNotification.isChecked) 1 else 0
                     val actualDate = getDateTimeCalendar()
-                    val updatedTask = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(task.dueDate), allowNotification, completed)
+                    val updatedTask = Task(task.id, task.title, task.description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(task.dueDate), task.allowNotification, task.notified, completed)
                     val taskDAO = TaskDAO(context)
 
                     if(taskDAO.update(updatedTask)) {
                         Toast.makeText(context, "Tarefa concluída!", Toast.LENGTH_SHORT).show()
                         tgCompleted.isClickable = false
                         fabCompletedTasks.isEnabled = false
+
                         Handler(Looper.getMainLooper()).postDelayed({
                             updateTaskList()
                             tgCompleted.isClickable = true
@@ -80,10 +94,10 @@ class TaskAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val itemTarefaBinding = ListItemBinding.inflate(
+        val taskItemBinding = ListItemBinding.inflate(
             layoutInflater, parent, false
         )
-        return TaskViewHolder(itemTarefaBinding)
+        return TaskViewHolder(taskItemBinding)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {

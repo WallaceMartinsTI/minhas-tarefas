@@ -30,8 +30,6 @@ class CompletedTasksActivity : AppCompatActivity() {
         val bundle = intent.extras
         if(bundle != null) {
             tasks = intent.getParcelableArrayListExtra("tasks") ?: emptyList()
-            //Log.i("teste", "LISTA DE TASKS")
-            //Log.i("teste", "$tasks")
         }
 
         with(binding) {
@@ -81,7 +79,8 @@ class CompletedTasksActivity : AppCompatActivity() {
             }
         }
 
-        completedTasksAdapter?.addList(completedTasks.reversed())
+        val sortedList = completedTasks.sortedByDescending { it.updatedAt }
+        completedTasksAdapter?.addList(sortedList)
     }
 
     override fun onStart() {

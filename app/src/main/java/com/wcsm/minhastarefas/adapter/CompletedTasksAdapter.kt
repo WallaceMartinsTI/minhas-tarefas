@@ -3,7 +3,6 @@ package com.wcsm.minhastarefas.adapter
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -64,6 +63,7 @@ class CompletedTasksAdapter(
                         convertToSQLiteFormat(actualDate),
                         convertToSQLiteFormat(completedTasksList.dueDate),
                         completedTasksList.allowNotification,
+                        completedTasksList.notified,
                         completed
                     )
                     val taskDAO = TaskDAO(context)

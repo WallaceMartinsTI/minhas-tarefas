@@ -17,6 +17,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE, null
         const val COL_TASK_UPDATED_AT = "updated_at"
         const val COL_TASK_DUE_DATE = "due_date"
         const val COL_ALLOW_NOTIFICATION = "allow_notification"
+        const val COL_NOTIFIED = "notified"
         const val COL_TASK_COMPLETED = "completed"
     }
     override fun onCreate(db: SQLiteDatabase?) {
@@ -28,6 +29,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE, null
                 " $COL_TASK_UPDATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 " $COL_TASK_DUE_DATE DATETIME NOT NULL," +
                 " $COL_ALLOW_NOTIFICATION INTEGER NOT NULL DEFAULT 0," +
+                " $COL_NOTIFIED INTEGER NOT NULL DEFAULT 0," +
                 " $COL_TASK_COMPLETED INTEGER NOT NULL DEFAULT 0" +
                 ");"
 

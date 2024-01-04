@@ -9,6 +9,7 @@ class TaskDAO(context: Context): ITaskDAO {
 
     private val writing = DatabaseHelper(context).writableDatabase
     private val reading = DatabaseHelper(context).readableDatabase
+
     override fun save(task: Task): Boolean {
         val content = ContentValues()
         content.put(DatabaseHelper.COL_TASK_TITLE, task.title)
@@ -17,6 +18,7 @@ class TaskDAO(context: Context): ITaskDAO {
         content.put(DatabaseHelper.COL_TASK_UPDATED_AT, task.updatedAt)
         content.put(DatabaseHelper.COL_TASK_DUE_DATE, task.dueDate)
         content.put(DatabaseHelper.COL_ALLOW_NOTIFICATION, task.allowNotification)
+        content.put(DatabaseHelper.COL_NOTIFIED, task.notified)
         content.put(DatabaseHelper.COL_TASK_COMPLETED, task.completed)
 
         try {
@@ -44,6 +46,7 @@ class TaskDAO(context: Context): ITaskDAO {
         content.put(DatabaseHelper.COL_TASK_UPDATED_AT, task.updatedAt)
         content.put(DatabaseHelper.COL_TASK_DUE_DATE, task.dueDate)
         content.put(DatabaseHelper.COL_ALLOW_NOTIFICATION, task.allowNotification)
+        content.put(DatabaseHelper.COL_NOTIFIED, task.notified)
         content.put(DatabaseHelper.COL_TASK_COMPLETED, task.completed)
 
         try {
@@ -93,7 +96,9 @@ class TaskDAO(context: Context): ITaskDAO {
                 " AS ${DatabaseHelper.COL_TASK_UPDATED_AT}," +
                 " strftime('%d/%m/%Y - %H:%M', ${DatabaseHelper.COL_TASK_DUE_DATE})" +
                 " AS ${DatabaseHelper.COL_TASK_DUE_DATE}," +
-                " ${DatabaseHelper.COL_ALLOW_NOTIFICATION}, ${DatabaseHelper.COL_TASK_COMPLETED}" +
+                " ${DatabaseHelper.COL_ALLOW_NOTIFICATION}," +
+                " ${DatabaseHelper.COL_NOTIFIED}," +
+                " ${DatabaseHelper.COL_TASK_COMPLETED}" +
                 " FROM ${DatabaseHelper.TABLE_NAME};"
 
         val cursor = reading.rawQuery(sql, null)
@@ -105,6 +110,7 @@ class TaskDAO(context: Context): ITaskDAO {
         val updatedAtIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_UPDATED_AT)
         val dueDateIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_DUE_DATE)
         val allowNotificationIndex = cursor.getColumnIndex(DatabaseHelper.COL_ALLOW_NOTIFICATION)
+        val notifiedIndex = cursor.getColumnIndex(DatabaseHelper.COL_NOTIFIED)
         val completedIndex = cursor.getColumnIndex(DatabaseHelper.COL_TASK_COMPLETED)
 
         while(cursor.moveToNext()) {
@@ -114,12 +120,11 @@ class TaskDAO(context: Context): ITaskDAO {
             val createdAt = cursor.getString(createdAtIndex)
             val updatedAt = cursor.getString(updatedAtIndex)
             val dueDate = cursor.getString(dueDateIndex)
-            val allowNotification = cursor.getInt(allowNotificationIndex);
-            val completed = cursor.getInt(completedIndex);
+            val allowNotification = cursor.getInt(allowNotificationIndex)
+            val notified = cursor.getInt(notifiedIndex)
+            val completed = cursor.getInt(completedIndex)
 
-            //Log.i("teste", "$id - $title - $description - $createdAt - $dueDate - $allowNotification - $completed")
-
-            taskList.add(Task(id, title, description, createdAt, updatedAt, dueDate, allowNotification, completed))
+            taskList.add(Task(id, title, description, createdAt, updatedAt, dueDate, allowNotification, notified, completed))
         }
 
         return taskList
