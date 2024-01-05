@@ -3,6 +3,7 @@ package com.wcsm.minhastarefas
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.DatePicker
@@ -38,6 +39,13 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val locale = Locale("pt", "BR")
+        Locale.setDefault(locale)
+
+        val config = Configuration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, baseContext.resources.displayMetrics)
 
         val bundle = intent.extras
         if(bundle != null) {
