@@ -1,7 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <!-- Theme.MaterialComponents.DayNight.DarkActionBar -->
-    <style name="Base.Theme.MinhasTarefas" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Customize your light theme here. -->
-    </style>
-</resources>
