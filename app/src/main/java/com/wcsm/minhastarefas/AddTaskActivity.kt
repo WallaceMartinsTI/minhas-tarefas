@@ -118,7 +118,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         val description = binding.editTextDescription.text.toString()
         val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
-        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, task.notified, task.completed)
+        val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0, task.completed)
         val taskDAO = TaskDAO(applicationContext)
 
         if(taskDAO.update(task)) {
