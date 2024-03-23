@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.media.RingtoneManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, CompletedTasksActivity::class.java)
                 intent.putParcelableArrayListExtra("tasks", ArrayList(completedTasksList))
                 startActivity(intent)
+            }
+
+            fabDeleteAllTasks.setOnClickListener {
+                deleteAllTasks()
             }
 
             taskAdapter = TaskAdapter(
@@ -109,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val name = "Tarefa Pendente"
         val description = "Notificações de tarefas pendentes"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.setSound(defaultSoundUri, null)
@@ -125,6 +131,33 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("screen_title", "Editar Tarefa")
         intent.putExtra("button_text", "ATUALIZAR")
         startActivity(intent)
+    }
+
+    private fun deleteAllTasks() {
+        val alertBuilder = AlertDialog.Builder(this)
+        alertBuilder.setTitle("Confirmar exclusão de TODAS AS TAREFAS")
+        alertBuilder.setMessage("Deseja realmente excluir todas as tarefa?")
+        alertBuilder.setPositiveButton("Sim") {_, _ ->
+            var deletingErrors = 0
+            if(taskList.isNotEmpty()) {
+                val taskDAO = TaskDAO(this)
+                taskList.forEach {
+                    if(!taskDAO.delete(it.id)) {
+                        deletingErrors++
+                    }
+                }
+                if(deletingErrors > 0) {
+                    Toast.makeText(this, "Erro ao remover todas as tarefas", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Todas as tarefas foram removidas.", Toast.LENGTH_SHORT).show()
+                    updateTaskList()
+                }
+            } else {
+                Toast.makeText(this, "Não há tarefas para serem removidas.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        alertBuilder.setNegativeButton("Não") {_, _ ->}
+        alertBuilder.create().show()
     }
 
     private fun confirmDelete(id: Int) {
@@ -214,6 +247,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        taskList.forEach {
+            Log.i("TAREFAS_VER_O_ID", "$it \n")
+        }
         updateTaskList()
     }
 }
