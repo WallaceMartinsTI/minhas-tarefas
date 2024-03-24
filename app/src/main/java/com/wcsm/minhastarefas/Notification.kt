@@ -25,7 +25,6 @@ class Notification : BroadcastReceiver() {
         val notificationIntent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-
         val notification = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_taskapp_24)
             .setContentTitle("Tarefa Pendente")
@@ -36,5 +35,10 @@ class Notification : BroadcastReceiver() {
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(notificationID, notification)
+
+        pendingIntent?.let {
+            it.cancel()
+            manager.cancel(notificationID)
+        }
     }
 }

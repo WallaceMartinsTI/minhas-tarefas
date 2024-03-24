@@ -11,7 +11,6 @@ import android.graphics.Color
 import android.media.RingtoneManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,7 +24,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,8 +41,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-
 
         createNotificationChannel()
 
@@ -97,17 +93,12 @@ class MainActivity : AppCompatActivity() {
         pendingIntentsMap[notificationID] = pendingIntent
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val time = getTime(date)
+        val time = date.timeInMillis
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             time,
             pendingIntent
         )
-    }
-
-    private fun getTime(date: Calendar): Long {
-        date.add(Calendar.HOUR_OF_DAY, -1)
-        return date.timeInMillis
     }
 
     @SuppressLint("NewApi")
@@ -249,9 +240,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        taskList.forEach {
-            Log.i("TAREFAS_VER_O_ID", "$it \n")
-        }
         updateTaskList()
     }
 }

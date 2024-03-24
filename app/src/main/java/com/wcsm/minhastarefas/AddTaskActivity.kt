@@ -290,7 +290,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                 btnGenerate.isEnabled = true
             }
         } else {
-            println("DEVE CHEGAR AQUI")
             with(binding) {
                 tvMonday.isEnabled = false
                 layoutMonday.isEnabled = false
