@@ -31,14 +31,10 @@ class Notification : BroadcastReceiver() {
             .setContentText("A tarefa \"$title\" está próxima ao prazo final.")
             .setContentIntent(pendingIntent)
             .setColor(Color.parseColor("#EC6109"))
+            .setAutoCancel(true)
             .build()
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(notificationID, notification)
-
-        pendingIntent?.let {
-            it.cancel()
-            manager.cancel(notificationID)
-        }
     }
 }

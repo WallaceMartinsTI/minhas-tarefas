@@ -1,13 +1,19 @@
 package com.wcsm.minhastarefas
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -52,9 +58,13 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
     private var coroutineScope: CoroutineScope? = null
 
+    private lateinit var taskDAO: TaskDAO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        taskDAO = TaskDAO(applicationContext)
 
         val locale = Locale("pt", "BR")
         Locale.setDefault(locale)
@@ -85,7 +95,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             btnBack.setOnClickListener {
                 finish()
             }
-
 
             binding.tvDatetimePicked.text = actualDate
 
@@ -146,7 +155,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                         DailyTask("Tarefas de Casa", "Realizar as tarefas de casa.", "$actualDay - 17:05"),
                         DailyTask("Começar os Estudos", "Android? Inglês? Outros? Apenas ESTUDE!", "$actualDay - 18:20"),
                         DailyTask("Tempo Livre", "O Fim do dia chegou, faça o que quiser!!!", "$actualDay - 21:20"),
-                        DailyTask("Big Trotos Teste", "Saidera que eu quero dormir", "$actualDay - 04:43")
                     )
 
                     addAllWeeklyTasks(dailyTasks)
@@ -199,7 +207,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
     private fun addTask(title: String, description: String, dueDate: String, allowNotification: Int ) {
             val task = Task(-1, title, description, convertToSQLiteFormat(actualDate), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0, 0)
-            val taskDAO = TaskDAO(applicationContext)
 
             if(taskDAO.save(task)) {
                 if(!isDailyTasks) {
@@ -214,7 +221,6 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         val allowNotification = if(binding.cbAllowNotification.isChecked) 1 else 0
 
         val task = Task(task.id, title, description, convertToSQLiteFormat(task.createdAt), convertToSQLiteFormat(actualDate), convertToSQLiteFormat(dueDate), allowNotification, 0, task.completed)
-        val taskDAO = TaskDAO(applicationContext)
 
         if(taskDAO.update(task)) {
             Toast.makeText(applicationContext, "Tarefa atualizada com sucesso!", Toast.LENGTH_SHORT).show()
@@ -231,19 +237,24 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         return true
     }
 
-    private fun validateMonday(mondayField: TextInputLayout, mondayInputed: String): Boolean {
+    private fun validateMonday(mondayField: TextInputLayout, mondayInputed: String?): Boolean {
         mondayField.error = null
 
-        try {
-            val monday = mondayInputed.toInt()
-            if(monday <= 0 || monday > 31) {
-                mondayField.error = "Informe um dia válido 1 à 31."
+        if(mondayInputed != null) {
+            try {
+                val monday = mondayInputed.toInt()
+                if(monday <= 0 || monday > 31) {
+                    mondayField.error = "Informe um dia válido 1 à 31."
+                    return false
+                }
+                return true
+            } catch (e: NumberFormatException) {
+                e.printStackTrace()
+                mondayField.error = "Dia inválido."
                 return false
             }
-            return true
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-            mondayField.error = "Dia inválido."
+        } else {
+            mondayField.error = "Dia nulo."
             return false
         }
     }
