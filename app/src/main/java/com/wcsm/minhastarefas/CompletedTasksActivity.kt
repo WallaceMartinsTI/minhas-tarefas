@@ -18,7 +18,8 @@ class CompletedTasksActivity : AppCompatActivity() {
         ActivityCompletedTasksBinding.inflate(layoutInflater)
     }
 
-    private var taskList = emptyList<Task>()
+    private var tasksList = emptyList<Task>()
+    private val completedTasks = mutableListOf<Task>()
     private var completedTasksAdapter: CompletedTasksAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +38,10 @@ class CompletedTasksActivity : AppCompatActivity() {
                 finish()
             }
 
+            fabDeleteAllCompletedTasks.setOnClickListener {
+                deleteAllCompletedTasks()
+            }
+
             completedTasksAdapter = CompletedTasksAdapter(applicationContext, tasks,
                 { updateCompletedTaskList() }, {taskId -> confirmDelete(taskId)}, btnBackToMain)
 
@@ -46,6 +51,36 @@ class CompletedTasksActivity : AppCompatActivity() {
             )
             rvCompletedTasks.layoutManager = LinearLayoutManager(applicationContext)
         }
+    }
+
+    private fun deleteAllCompletedTasks() {
+        val alertBuilder = AlertDialog.Builder(this)
+        alertBuilder.setTitle("Confirmar exclusão de TODAS AS TAREFAS CONCLUÍDAS")
+        alertBuilder.setMessage("Deseja realmente excluir todas as tarefa concluídas?")
+        alertBuilder.setPositiveButton("Sim") {_, _ ->
+            var deletingErrors = 0
+            if(completedTasks.isNotEmpty()) {
+                val taskDAO = TaskDAO(this)
+                completedTasks.forEach {
+                    println("Vai deletar a tarefa: $it")
+                    if(!taskDAO.delete(it.id)) {
+                        println("Erro ao deletar a tarefa: $it")
+                        deletingErrors++
+                    }
+                }
+                if(deletingErrors > 0) {
+                    Toast.makeText(this, "Erro ao remover todas as tarefas", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Todas as tarefas foram removidas.", Toast.LENGTH_SHORT).show()
+                    completedTasks.clear()
+                    updateCompletedTaskList()
+                }
+            } else {
+                Toast.makeText(this, "Não há tarefas para serem removidas.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        alertBuilder.setNegativeButton("Não") {_, _ ->}
+        alertBuilder.create().show()
     }
 
     private fun confirmDelete(id: Int) {
@@ -68,18 +103,20 @@ class CompletedTasksActivity : AppCompatActivity() {
     }
 
     private fun updateCompletedTaskList() {
-        val completedTasks = mutableListOf<Task>()
-
+        println("Chamou updateCompletedTaskList")
         val taskDAO = TaskDAO(this)
-        taskList = taskDAO.listTasks()
+        tasksList = taskDAO.listTasks()
 
-        taskList.forEach {
+        println("taskList: $tasksList")
+        tasksList.forEach {
             if(it.completed > 0) {
                 completedTasks.add(it)
             }
         }
 
+        println("completedTasks apos forEach: $completedTasks")
         val sortedList = completedTasks.sortedByDescending { it.updatedAt }
+        println("sortedList: $sortedList")
         completedTasksAdapter?.addList(sortedList)
     }
 

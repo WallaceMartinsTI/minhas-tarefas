@@ -236,7 +236,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 
         try {
             val monday = mondayInputed.toInt()
-            if(monday < 0 || monday > 31) {
+            if(monday <= 0 || monday > 31) {
                 mondayField.error = "Informe um dia válido 1 à 31."
                 return false
             }

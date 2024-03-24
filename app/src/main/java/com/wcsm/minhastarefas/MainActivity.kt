@@ -142,8 +142,10 @@ class MainActivity : AppCompatActivity() {
             if(taskList.isNotEmpty()) {
                 val taskDAO = TaskDAO(this)
                 taskList.forEach {
-                    if(!taskDAO.delete(it.id)) {
-                        deletingErrors++
+                    if(it.completed == 0) {
+                        if(!taskDAO.delete(it.id)) {
+                            deletingErrors++
+                        }
                     }
                 }
                 if(deletingErrors > 0) {
